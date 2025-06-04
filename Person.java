@@ -37,18 +37,22 @@ public class Person {
     public boolean addPerson() {
         boolean isValid = true;
 
+        // Validate ID format
         if (!isValidPersonID(personID)) {
         isValid = false;
         }
 
+        // Validate address format
         if (isValid && !isValidAddress(address)) {
         isValid = false;
         }
 
+        // Validate birthdate format
         if (isValid && !isValidBirthdate(birthdate)) {
         isValid = false;
         }
 
+        // Write to file if all checks passed
         if (isValid) {
             try {
                 FileWriter writer = new FileWriter("persons.txt", true);
@@ -64,13 +68,16 @@ public class Person {
     }
 
 
+    // Validates person ID based on specific format
     private boolean isValidPersonID(String id) {
         boolean result = true;
 
+        // Condition 1: Must be exactly 10 characters
         if (id == null || id.length() != 10) {
             result = false;
         }
 
+        // Condition 2: First two characters must be digits between '2' and '9'
         if (result) {
             char c0 = id.charAt(0);
             char c1 = id.charAt(1);
@@ -84,6 +91,7 @@ public class Person {
             }
         }
 
+        // Condition 3: Characters at positions 2 to 7 must include at least two non-alphanumeric characters
         if (result) {
             int specialCount = 0;
             int i = 2;
@@ -99,6 +107,7 @@ public class Person {
             }
         }
 
+        // Condition 4: Last two characters must be uppercase letters
         if (result) {
             char c8 = id.charAt(8);
             char c9 = id.charAt(9);
@@ -110,15 +119,18 @@ public class Person {
         return result;
     }
 
+    //  Validates address format 
     private boolean isValidAddress(String addr) {
         boolean result = true;
 
+        // Must not be null
         if (addr == null) {
             result = false;
         }
 
         String[] parts = null;
 
+        // Must contain 5 fields separated by '|'
         if (result) {
             parts = addr.split("\\|");
             if (parts.length != 5) {
@@ -126,6 +138,7 @@ public class Person {
             }
         }
 
+        // State (4th field) must be 'Victoria'
         if (result && !parts[3].equals("Victoria")) {
             result = false;
         }
@@ -133,6 +146,8 @@ public class Person {
         return result;
     }
 
+
+    // Validates date format (dd-MM-yyyy) 
     private boolean isValidBirthdate(String dateStr) {
         boolean result = true;
 
@@ -179,20 +194,8 @@ public class Person {
 
 
 
-
-
-
-
-
-
-
-
-
-
       
     public boolean updatePersonalDetails() {
-
-        
         return true;
     }
 
