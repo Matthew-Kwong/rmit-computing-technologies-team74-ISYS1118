@@ -1,9 +1,13 @@
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.io.BufferedReader;
@@ -20,25 +24,43 @@ public class Person {
     private String lastName;
     private String address;
     private String birthdate;
-    private HashMap<Date, Integer>demeritPoints;
+    private HashMap<LocalDate, Integer>demeritPoints = new HashMap<>();
     private boolean isSuspended;
+
+    public Person(){
+        firstName = "Bob";
+        birthdate = "05-12-2005";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate date_1 = LocalDate.parse("20-03-2020", formatter);
+        LocalDate date_2 = LocalDate.parse("05-12-2019", formatter);
+        LocalDate date_3 = LocalDate.parse("25-03-2024", formatter);
+        LocalDate date_4 = LocalDate.parse("11-02-2025", formatter);
+        demeritPoints.put(date_1, 2);
+        demeritPoints.put(date_2, 4);
+        demeritPoints.put(date_3, 3);
+        demeritPoints.put(date_4, 5);
+    }
 
     // Gayath : dont change this (Let me know if you need to)
     public boolean addPerson() {
         boolean isValid = true;
 
+        // Validate ID format
         if (!isValidPersonID(personID)) {
         isValid = false;
         }
 
+        // Validate address format
         if (isValid && !isValidAddress(address)) {
         isValid = false;
         }
 
+        // Validate birthdate format
         if (isValid && !isValidBirthdate(birthdate)) {
         isValid = false;
         }
 
+        // Write to file if all checks passed
         if (isValid) {
             try {
                 FileWriter writer = new FileWriter("persons.txt", true);
@@ -54,13 +76,16 @@ public class Person {
     }
 
 
+    // Validates person ID based on specific format
     private boolean isValidPersonID(String id) {
         boolean result = true;
 
+        // Condition 1: Must be exactly 10 characters
         if (id == null || id.length() != 10) {
             result = false;
         }
 
+        // Condition 2: First two characters must be digits between '2' and '9'
         if (result) {
             char c0 = id.charAt(0);
             char c1 = id.charAt(1);
@@ -74,6 +99,7 @@ public class Person {
             }
         }
 
+        // Condition 3: Characters at positions 2 to 7 must include at least two non-alphanumeric characters
         if (result) {
             int specialCount = 0;
             int i = 2;
@@ -89,6 +115,7 @@ public class Person {
             }
         }
 
+        // Condition 4: Last two characters must be uppercase letters
         if (result) {
             char c8 = id.charAt(8);
             char c9 = id.charAt(9);
@@ -100,15 +127,18 @@ public class Person {
         return result;
     }
 
+    //  Validates address format 
     private boolean isValidAddress(String addr) {
         boolean result = true;
 
+        // Must not be null
         if (addr == null) {
             result = false;
         }
 
         String[] parts = null;
 
+        // Must contain 5 fields separated by '|'
         if (result) {
             parts = addr.split("\\|");
             if (parts.length != 5) {
@@ -116,6 +146,7 @@ public class Person {
             }
         }
 
+        // State (4th field) must be 'Victoria'
         if (result && !parts[3].equals("Victoria")) {
             result = false;
         }
@@ -123,6 +154,8 @@ public class Person {
         return result;
     }
 
+
+    // Validates date format (dd-MM-yyyy) 
     private boolean isValidBirthdate(String dateStr) {
         boolean result = true;
 
@@ -205,6 +238,14 @@ public class Person {
             return false;
         }
     }
+
+
+
+
+
+
+
+
 
 
 
@@ -308,9 +349,113 @@ public class Person {
         return true;
     }
 
-    public String addDemeritPoints() {
+    
 
+    // add demerit point to hash map
+    public String addDemeritPoints(String date, Integer points){
+        try{
+            // check date format
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            LocalDate formattedDate = LocalDate.parse(date, formatter);
+            // points check
+            if (points >= 1 && points <= 6){
+                demeritPoints.put(formattedDate, points);
+            }
+            else{
+                return "Failed";
+            }
+        }
+        catch(DateTimeParseException e){
+            return "Failed";
+        }
+        
+        return "Success";
+    }
+
+    // write offense date and points to text file
+    public String processDemeritPoints() {
+        // create text file
+        String fileName = firstName + ".txt";
+        createFile(fileName);
+
+        // calculate age
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate localBirthDate = LocalDate.parse(birthdate, formatter); // format birth date to LocalDate for age calculation
+        LocalDate now = LocalDate.now(); // get current date
+        Period period = Period.between(localBirthDate, now);
+        int age = period.getYears();
+
+        int totalDemeritsPoint = 0;
+        boolean validEntry = false;
+        for (LocalDate offenseDate : demeritPoints.keySet()){
+            // Check if offense date is within the past 2 years
+            Period periodSinceOffense = Period.between(offenseDate, now);
+            int yearsSinceOffense = periodSinceOffense.getYears();
+            
+            if (yearsSinceOffense < 2){
+                int points = demeritPoints.get(offenseDate);
+
+                // check if points is within 1 to 6 or not
+                if (points >= 1 && points <= 6){
+                    totalDemeritsPoint += points;
+                    fileWriter(fileName, formatter.format(offenseDate) + ": " + points);
+                    validEntry = true;
+                }
+                else {
+                    System.out.println("Invalid demerit point: " + points);
+                    return "Failed"; // points is not in 1 to 6
+                }
+            }
+        }
+
+        if (!validEntry) {
+            System.out.println("No valid demerit points to record.");
+            return "Failed"; // Nothing valid within 2 years
+        }
+
+        // check License suspension
+        isSuspended = false;
+        if (age < 21){
+            if (totalDemeritsPoint > 6){
+                isSuspended = true;
+            }
+        }
+        else{
+            if (totalDemeritsPoint > 12){
+                isSuspended = true;
+            }
+        } 
+        System.out.println("License suspended: " + isSuspended);
 
         return "Success";
+    }
+
+    public void createFile(String fileName){
+        File file = new File(fileName);
+
+        try{
+            if (file.createNewFile()) {
+                System.out.println("File created: " + file.getName());
+            } else {
+                System.out.println("File already exists.");
+            }
+        }
+        catch (IOException e){
+            System.out.println("An error occur while create file");
+            e.printStackTrace();
+        }
+    }
+
+    public void fileWriter(String fileName, String content){
+        try{
+            FileWriter fileWriter = new FileWriter(fileName, true);
+            fileWriter.write(content + "\n");
+            fileWriter.close();
+            // System.out.println("Write " + content + " to file successfully");
+        }
+        catch(IOException e){
+            System.out.println("An error occur while writing to the file");
+            e.printStackTrace();
+        }
     }
 }
