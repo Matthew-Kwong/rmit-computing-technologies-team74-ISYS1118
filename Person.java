@@ -251,14 +251,13 @@ public class Person {
 
 
   
-    public boolean updatePersonalDetails() {
+    public boolean updatePersonalDetails(Scanner scanner) {
         try {
             deletePerson();
         } catch (IOException e) {
             return false;
         }
         boolean UserContinue = true;
-        Scanner scanner = new Scanner(System.in);
         while (UserContinue) {
 
             System.out.println("Select a number from 1-6 for the information you want to update:");
@@ -287,7 +286,13 @@ public class Person {
                                     System.out.println("Person ID cannot be updated for even-numbered IDs.");
                                     continue;
                                 }
-                                System.out.print("Enter new Person ID: ");
+                                System.out.print("""
+                                Enter new Person ID: should be exactly 10 characters long, 
+                                the first two characters should be numbers between 2 and 9, 
+                                there should be at least two special characters between characters 3 and 8, 
+                                and the last two characters should be uppercase letters (A-Z). 
+                                Example: \"56s_d%&fAB\"
+                                """);
                                 String newID = scanner.nextLine();
                                 if (isValidPersonID(newID)) {
                                     setPersonID(newID);
@@ -298,11 +303,13 @@ public class Person {
                             case 2:
                                 System.out.print("Enter new First Name: ");
                                 setFirstName(scanner.nextLine());
+                                break;
                             case 3:
                                 System.out.print("Enter new Last Name: ");
                                 setLastName(scanner.nextLine());
+                                break;
                             case 4:
-                                System.out.print("Enter new Address: ");
+                                System.out.print("Enter new Address: Format: 123|Main Street|Melbourne|Victoria|Australia\n");
                                 String newAddress = scanner.nextLine();
                                 if (isValidAddress(newAddress)) {
                                     setAddress(newAddress);
@@ -320,7 +327,7 @@ public class Person {
                                 if (isValidBirthdate(newBirthdate)) {
                                     setBirthdate(newBirthdate);
                                     System.out.println("Birthdate updated successfully, nothing else can be changed now!");
-                                    addPerson(); 
+                                    addPerson();
                                     return true;
                                 } else {
                                     System.out.println("Invalid Birthdate.");
@@ -336,16 +343,16 @@ public class Person {
                     System.out.println("Invalid input. Please enter a number between 1 and 6.");
                 }
             }
+            
         }
         
-        scanner.close();
+        
         
         boolean added = addPerson();
         if (!added) {
             System.out.println("Failed to update personal details & user may not exist.");
             return false;
         }
-        
         return true;
     }
 

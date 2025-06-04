@@ -25,13 +25,14 @@ public class tester {
         return null; // No match found or error occurred
     }
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        
         Person p = new Person();
-
+        Scanner scanner = new Scanner(System.in);
         // Set valid person details
        
         boolean exit = false;
         while (!exit) {
+            
             System.out.println("Select the number for the following options:");
             System.out.println("1. Add Person Details");
             System.out.println("2. Update Person Details");
@@ -67,13 +68,17 @@ public class tester {
                         System.out.println("Enter Person ID to update:");
                         String updatePersonID = scanner.nextLine();
                         String[] existingDetails = getLinePartsByID("persons.txt", updatePersonID);
+                        if (existingDetails == null) {
+                            System.out.println("No person found with that ID.");
+                            break;
+                        }
                         Person currPerson = new Person();
                         currPerson.setPersonID(existingDetails[0]);
                         currPerson.setFirstName(existingDetails[1]);
                         currPerson.setLastName(existingDetails[2]); 
                         currPerson.setAddress(existingDetails[3]);
                         currPerson.setBirthdate(existingDetails[4]);
-                        currPerson.updatePersonalDetails();
+                        currPerson.updatePersonalDetails(scanner);
 
 
                         break;
@@ -95,10 +100,14 @@ public class tester {
             } catch (IOException e) {
                 System.out.println("An error occurred: " + e.getMessage());
             }
+            
         }
+
         scanner.close();
+        
 
 
 
     }
 }
+
