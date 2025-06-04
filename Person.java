@@ -1,9 +1,17 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
+import java.time.LocalDate;
+import java.time.Period;
 
 public class Person {
 
@@ -158,22 +166,144 @@ public class Person {
       }
 
 
+    public void deletePerson() throws IOException {
+        String fileName = "persons.txt";
+        File file = new File(fileName);
+        File tempFile = new File("temp.txt");
+        if (!file.exists()) {
+            System.out.println("File does not exist.");
+            return;
+        }
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        PrintWriter writer = new PrintWriter(new FileWriter(tempFile));
+        String currLine;
+
+
+        while ((currLine = reader.readLine()) != null) {
+            if (!currLine.startsWith(personID + ",")) {
+                writer.println(currLine);
+            }
+        }
+        writer.close();
+        reader.close();
+        if (file.delete()) {
+            tempFile.renameTo(file);
+        }
+        else {
+            System.out.println("Error deleting the file.");
+        }
+    }
+
+    public boolean isOverEighteen() {
+        LocalDate today = LocalDate.now();
+        LocalDate DOB = LocalDate.parse(this.birthdate, java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        Period age = Period.between(DOB, today);
+        if (age.getYears() >= 18) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
 
 
 
-
-
-
-
-
-
-
-
-
-      
+  
     public boolean updatePersonalDetails() {
+        try {
+            deletePerson();
+        } catch (IOException e) {
+            return false;
+        }
+        boolean UserContinue = true;
+        Scanner scanner = new Scanner(System.in);
+        while (UserContinue) {
 
+            System.out.println("Select a number from 1-6 for the information you want to update:");
+            System.out.println("1. Person ID");
+            System.out.println("2. First Name");
+            System.out.println("3. Last Name");
+            System.out.println("4. Address");
+            System.out.println("5. Birthdate");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            boolean canUpdateDOB = isOverEighteen();
+
+            
+            
+            boolean validInt = false;
+            while (!validInt) {
+                try {
+                    int choice = Integer.parseInt(scanner.nextLine());
+                    if (choice < 1 || choice > 6) {
+                        System.out.println("Invalid choice. Please select a number between 1 and 6.");
+                    } else {
+                        validInt = true;
+                        switch (choice) {
+                            case 1:
+                                if (personID.charAt(0) % 2 == 0) {
+                                    System.out.println("Person ID cannot be updated for even-numbered IDs.");
+                                    continue;
+                                }
+                                System.out.print("Enter new Person ID: ");
+                                String newID = scanner.nextLine();
+                                if (isValidPersonID(newID)) {
+                                    setPersonID(newID);
+                                } else {
+                                    System.out.println("Invalid Person ID.");
+                                }
+                                break;
+                            case 2:
+                                System.out.print("Enter new First Name: ");
+                                setFirstName(scanner.nextLine());
+                            case 3:
+                                System.out.print("Enter new Last Name: ");
+                                setLastName(scanner.nextLine());
+                            case 4:
+                                System.out.print("Enter new Address: ");
+                                String newAddress = scanner.nextLine();
+                                if (isValidAddress(newAddress)) {
+                                    setAddress(newAddress);
+                                } else {
+                                    System.out.println("Invalid Address.");
+                                }
+                                break;
+                            case 5:
+                                if (!canUpdateDOB) {
+                                    System.out.println("You cannot update the birthdate. You are not over 18.");
+                                    continue;
+                                }
+                                System.out.print("Enter new Birthdate (dd-MM-yyyy): ");
+                                String newBirthdate = scanner.nextLine();
+                                if (isValidBirthdate(newBirthdate)) {
+                                    setBirthdate(newBirthdate);
+                                    System.out.println("Birthdate updated successfully, nothing else can be changed now!");
+                                    addPerson(); 
+                                    return true;
+                                } else {
+                                    System.out.println("Invalid Birthdate.");
+                                }
+                                break;
+                            case 6:
+                                System.out.println("Exiting update process.");
+                                UserContinue = false;
+                                continue;
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a number between 1 and 6.");
+                }
+            }
+        }
+        
+        scanner.close();
+        
+        boolean added = addPerson();
+        if (!added) {
+            System.out.println("Failed to update personal details & user may not exist.");
+            return false;
+        }
         
         return true;
     }
