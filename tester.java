@@ -85,9 +85,9 @@ public class tester {
                     case 3:
                         System.out.println("Enter Person ID to delete:");
                         String deletePersonID = scanner.nextLine();
-                        Person deletePerson = new Person();
-                        deletePerson.setPersonID(deletePersonID);
-                        p.deletePerson();
+                        Person deletePersonOfID = new Person();
+                        deletePersonOfID.setPersonID(deletePersonID);
+                        deletePersonOfID.deletePerson();
                         break;
                     case 4:
                         exit = true;
