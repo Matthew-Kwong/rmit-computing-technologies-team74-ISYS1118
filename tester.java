@@ -3,7 +3,7 @@ public class tester {
         Person p = new Person();
 
         // Set valid person details
-        p.setPersonID("56@_d%fGZQ");;
+        p.setPersonID("56@_d%fGZQ");
         p.setFirstName("John");
         p.setLastName("Doe");
         p.setAddress("123|Main Street|Melbourne|Victoria|Australia");
@@ -16,5 +16,8 @@ public class tester {
         } else {
             System.out.println("Person failed validation and was not added.");
         }
+        // System.out.println(p.processDemeritPoints());
+        p.addDemeritPoints("20-05-2025", 5);
+        System.out.println(p.processDemeritPoints());
     }
 }

@@ -1,8 +1,12 @@
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 
 public class Person {
@@ -12,8 +16,22 @@ public class Person {
     private String lastName;
     private String address;
     private String birthdate;
-    private HashMap<Date, Integer>demeritPoints;
+    private HashMap<LocalDate, Integer>demeritPoints = new HashMap<>();
     private boolean isSuspended;
+
+    public Person(){
+        firstName = "Bob";
+        birthdate = "05-12-2005";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate date_1 = LocalDate.parse("20-03-2020", formatter);
+        LocalDate date_2 = LocalDate.parse("05-12-2019", formatter);
+        LocalDate date_3 = LocalDate.parse("25-03-2024", formatter);
+        LocalDate date_4 = LocalDate.parse("11-02-2025", formatter);
+        demeritPoints.put(date_1, 2);
+        demeritPoints.put(date_2, 4);
+        demeritPoints.put(date_3, 3);
+        demeritPoints.put(date_4, 5);
+    }
 
     // Gayath : dont change this (Let me know if you need to)
     public boolean addPerson() {
@@ -178,9 +196,118 @@ public class Person {
         return true;
     }
 
-    public String addDemeritPoints() {
 
+
+
+
+
+
+
+    // add demerit point to hash map
+    public String addDemeritPoints(String date, Integer points){
+        try{
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            LocalDate formattedDate = LocalDate.parse(date, formatter);
+            if (points >= 1 && points <= 6){
+                demeritPoints.put(formattedDate, points);
+            }
+            else{
+                return "Failed";
+            }
+        }
+        catch(DateTimeParseException e){
+            return "Failed";
+        }
+        
+        return "Success";
+    }
+
+    // write offense date and points to text file
+    public String processDemeritPoints() {
+        // create text file
+        String fileName = firstName + ".txt";
+        createFile(fileName);
+
+        // calculate age
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate localBirthDate = LocalDate.parse(birthdate, formatter);
+        LocalDate now = LocalDate.now(); // get current date
+        Period period = Period.between(localBirthDate, now);
+        int age = period.getYears();
+        // System.out.println(age);
+
+        int totalDemeritsPoint = 0;
+        boolean validEntry = false;
+        for (LocalDate offenseDate : demeritPoints.keySet()){
+            // Check if offense date is within the past 2 years
+            Period periodSinceOffense = Period.between(offenseDate, now);
+            int yearsSinceOffense = periodSinceOffense.getYears();
+            
+            if (yearsSinceOffense < 2){
+                int points = demeritPoints.get(offenseDate);
+                // System.out.println(offenseDate + " " + points);
+
+                if (points >= 1 && points <= 6){
+                    totalDemeritsPoint += points;
+                    fileWriter(fileName, formatter.format(offenseDate) + ": " + points);
+                    validEntry = true;
+                }
+                else {
+                    System.out.println("Invalid demerit point: " + points);
+                    return "Failed";
+                }
+            }
+        }
+
+        if (!validEntry) {
+            System.out.println("No valid demerit points to record.");
+            return "Failed"; // Nothing valid within 2 years
+        }
+
+        // check License suspended
+        // System.out.println(totalDemeritsPoint);
+        isSuspended = false;
+        if (age < 21){
+            if (totalDemeritsPoint > 6){
+                isSuspended = true;
+            }
+        }
+        else{
+            if (totalDemeritsPoint > 12){
+                isSuspended = true;
+            }
+        } 
+        System.out.println("License suspended: " + isSuspended + "\n");
 
         return "Success";
+    }
+
+    public void createFile(String fileName){
+        File file = new File(fileName);
+
+        try{
+            if (file.createNewFile()) {
+                System.out.println("File created: " + file.getName());
+            } else {
+                System.out.println("File already exists.");
+            }
+        }
+        catch (IOException e){
+            System.out.println("An error occur while create file");
+            e.printStackTrace();
+        }
+    }
+
+    public void fileWriter(String fileName, String content){
+        try{
+            FileWriter fileWriter = new FileWriter(fileName, true);
+            fileWriter.write(content + "\n");
+            fileWriter.close();
+            // System.out.println("Write " + content + " to file successfully");
+        }
+        catch(IOException e){
+            System.out.println("An error occur while writing to the file");
+            e.printStackTrace();
+        }
     }
 }
