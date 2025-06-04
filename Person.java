@@ -206,8 +206,10 @@ public class Person {
     // add demerit point to hash map
     public String addDemeritPoints(String date, Integer points){
         try{
+            // check date format
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             LocalDate formattedDate = LocalDate.parse(date, formatter);
+            // points check
             if (points >= 1 && points <= 6){
                 demeritPoints.put(formattedDate, points);
             }
@@ -230,11 +232,10 @@ public class Person {
 
         // calculate age
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate localBirthDate = LocalDate.parse(birthdate, formatter);
+        LocalDate localBirthDate = LocalDate.parse(birthdate, formatter); // format birth date to LocalDate for age calculation
         LocalDate now = LocalDate.now(); // get current date
         Period period = Period.between(localBirthDate, now);
         int age = period.getYears();
-        // System.out.println(age);
 
         int totalDemeritsPoint = 0;
         boolean validEntry = false;
@@ -245,8 +246,8 @@ public class Person {
             
             if (yearsSinceOffense < 2){
                 int points = demeritPoints.get(offenseDate);
-                // System.out.println(offenseDate + " " + points);
 
+                // check if points is within 1 to 6 or not
                 if (points >= 1 && points <= 6){
                     totalDemeritsPoint += points;
                     fileWriter(fileName, formatter.format(offenseDate) + ": " + points);
@@ -254,7 +255,7 @@ public class Person {
                 }
                 else {
                     System.out.println("Invalid demerit point: " + points);
-                    return "Failed";
+                    return "Failed"; // points is not in 1 to 6
                 }
             }
         }
@@ -264,8 +265,7 @@ public class Person {
             return "Failed"; // Nothing valid within 2 years
         }
 
-        // check License suspended
-        // System.out.println(totalDemeritsPoint);
+        // check License suspension
         isSuspended = false;
         if (age < 21){
             if (totalDemeritsPoint > 6){
@@ -277,7 +277,7 @@ public class Person {
                 isSuspended = true;
             }
         } 
-        System.out.println("License suspended: " + isSuspended + "\n");
+        System.out.println("License suspended: " + isSuspended);
 
         return "Success";
     }
