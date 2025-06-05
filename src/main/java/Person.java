@@ -27,14 +27,14 @@ public class Person {
         firstName = "John";
         birthdate = "05-12-2005";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate date_1 = LocalDate.parse("20-03-2020", formatter);
-        LocalDate date_2 = LocalDate.parse("05-12-2019", formatter);
-        LocalDate date_3 = LocalDate.parse("25-03-2024", formatter);
-        LocalDate date_4 = LocalDate.parse("11-02-2025", formatter);
-        demeritPoints.put(date_1, 2);
-        demeritPoints.put(date_2, 4);
-        demeritPoints.put(date_3, 3);
-        demeritPoints.put(date_4, 5);
+        // LocalDate date_1 = LocalDate.parse("20-03-2020", formatter);
+        // LocalDate date_2 = LocalDate.parse("05-12-2019", formatter);
+        // LocalDate date_3 = LocalDate.parse("25-03-2024", formatter);
+        // LocalDate date_4 = LocalDate.parse("11-02-2025", formatter);
+        // demeritPoints.put(date_1, 2);
+        // demeritPoints.put(date_2, 4);
+        // demeritPoints.put(date_3, 3);
+        // demeritPoints.put(date_4, 5);
     }
 
     // Gayath : dont change this (Let me know if you need to)
@@ -257,7 +257,6 @@ public class Person {
             System.out.print("Enter your choice: ");
             boolean canUpdateDOB = isOverEighteen();
 
-            
             
             boolean validInt = false;
             while (!validInt) {
