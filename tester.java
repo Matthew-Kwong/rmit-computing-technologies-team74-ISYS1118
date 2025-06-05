@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -37,7 +38,9 @@ public class tester {
             System.out.println("1. Add Person Details");
             System.out.println("2. Update Person Details");
             System.out.println("3. Delete Person Details");
-            System.out.println("4. Exit");
+            System.out.println("4. Add Demerit Points");
+            System.out.println("5. Process Demerit Points");
+            System.out.println("6. Exit");
             try {
                 int choice = Integer.parseInt(scanner.nextLine());
                 switch (choice) {
@@ -90,6 +93,21 @@ public class tester {
                         deletePersonOfID.deletePerson();
                         break;
                     case 4:
+                        System.out.println("Enter offense date in dd-MM-yyyy format");
+                        String date = scanner.nextLine(); 
+                        System.out.println("Enter demerit points");
+                        Integer points = scanner.nextInt();
+                        System.out.println("Add demerit points: "+ p.addDemeritPoints(date, points));
+
+                        break;
+
+                    case 5:
+                        System.out.println("Process Demerit points started");
+                        System.out.println("Process Demerit points: " + p.processDemeritPoints());
+
+                        break;
+
+                    case 6:
                         exit = true;
                         break;
                     default:

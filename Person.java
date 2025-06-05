@@ -28,7 +28,7 @@ public class Person {
     private boolean isSuspended;
 
     public Person(){
-        firstName = "Bob";
+        firstName = "John";
         birthdate = "05-12-2005";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate date_1 = LocalDate.parse("20-03-2020", formatter);
@@ -369,10 +369,12 @@ public class Person {
                 demeritPoints.put(formattedDate, points);
             }
             else{
+                System.out.println("Invalid demerit point: " + points);
                 return "Failed";
             }
         }
         catch(DateTimeParseException e){
+            System.out.println("Incorrect date format");
             return "Failed";
         }
         
