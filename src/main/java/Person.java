@@ -255,7 +255,7 @@ public class Person {
             System.out.println("5. Birthdate");
             System.out.println("6. Exit");
             System.out.print("Enter your choice: ");
-            boolean canUpdateDOB = isOverEighteen();
+            boolean canUpdateAdress = isOverEighteen();
 
             
             
@@ -296,6 +296,10 @@ public class Person {
                                 setLastName(scanner.nextLine());
                                 break;
                             case 4:
+                                if (!canUpdateAdress) {
+                                    System.out.println("Address cannot be updated for users under 18.");
+                                    continue;
+                                }
                                 System.out.print("Enter new Address: Format: 123|Main Street|Melbourne|Victoria|Australia\n");
                                 String newAddress = scanner.nextLine();
                                 if (isValidAddress(newAddress)) {
@@ -305,10 +309,7 @@ public class Person {
                                 }
                                 break;
                             case 5:
-                                if (!canUpdateDOB) {
-                                    System.out.println("You cannot update the birthdate. You are not over 18.");
-                                    continue;
-                                }
+                                
                                 System.out.print("Enter new Birthdate (dd-MM-yyyy): ");
                                 String newBirthdate = scanner.nextLine();
                                 if (isValidBirthdate(newBirthdate)) {
