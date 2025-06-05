@@ -43,17 +43,17 @@ public class Person {
 
         // Validate ID format
         if (!isValidPersonID(personID)) {
-        isValid = false;
+            isValid = false;
         }
 
         // Validate address format
         if (isValid && !isValidAddress(address)) {
-        isValid = false;
+            isValid = false;
         }
 
         // Validate birthdate format
         if (isValid && !isValidBirthdate(birthdate)) {
-        isValid = false;
+            isValid = false;
         }
 
         // Write to file if all checks passed
@@ -195,6 +195,8 @@ public class Person {
       }
 
 
+
+
     public void deletePerson() throws IOException {
         String fileName = "persons.txt";
         File file = new File(fileName);
@@ -234,17 +236,6 @@ public class Person {
             return false;
         }
     }
-
-
-
-
-
-
-
-
-
-
-
 
   
     public boolean updatePersonalDetails(Scanner scanner) {
@@ -351,6 +342,8 @@ public class Person {
         }
         return true;
     }
+
+
 
     
 
