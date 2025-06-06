@@ -72,12 +72,17 @@ public class tester {
                             break;
                         }
                         Person currPerson = new Person();
+                        System.out.println("Current Person ID: " + existingDetails[0]);
                         currPerson.setPersonID(existingDetails[0]);
+                        System.out.println("Current First Name: " + existingDetails[1]);
                         currPerson.setFirstName(existingDetails[1]);
-                        currPerson.setLastName(existingDetails[2]); 
+                        System.out.println("Current Last Name: " + existingDetails[2]);
+                        currPerson.setLastName(existingDetails[2]);
+                        System.out.println("Current Address: " + existingDetails[3]); 
                         currPerson.setAddress(existingDetails[3]);
+                        System.out.println("Current Birthdate: " + existingDetails[4]);
                         currPerson.setBirthdate(existingDetails[4]);
-                        currPerson.updatePersonalDetails(scanner);
+                        currPerson.updatePersonalDetails(existingDetails[0], existingDetails[1], existingDetails[2], "432|Wiseman court|Melbourne|Victoria|Australia", existingDetails[4]);
 
 
                         break;

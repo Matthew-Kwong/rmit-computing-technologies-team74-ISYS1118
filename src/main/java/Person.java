@@ -203,32 +203,33 @@ public class Person {
         File tempFile = new File("temp.txt");
         if (!file.exists()) {
             System.out.println("File does not exist.");
-            return;
-        }
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        PrintWriter writer = new PrintWriter(new FileWriter(tempFile));
-        String currLine;
-
-
-        while ((currLine = reader.readLine()) != null) {
-            if (!currLine.startsWith(personID + ",")) {
-                writer.println(currLine);
-            }
-        }
-        writer.close();
-        reader.close();
-        if (file.delete()) {
-            tempFile.renameTo(file);
         }
         else {
-            System.out.println("Error deleting the file.");
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            PrintWriter writer = new PrintWriter(new FileWriter(tempFile));
+            String currLine;
+
+
+            while ((currLine = reader.readLine()) != null) { // loops through each line and adds to temp file skipping if line we need to delete
+                if (!currLine.startsWith(personID + ",")) {
+                    writer.println(currLine);
+                }
+            }
+            writer.close();
+            reader.close();
+            if (file.delete()) {
+                tempFile.renameTo(file); // makes temp file the original
+            }
+            else {
+                System.out.println("Error deleting the file.");
+            }
         }
     }
 
     public boolean isOverEighteen() {
         LocalDate today = LocalDate.now();
         LocalDate DOB = LocalDate.parse(this.birthdate, java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        Period age = Period.between(DOB, today);
+        Period age = Period.between(DOB, today); //uses period function to find time between two dates
         if (age.getYears() >= 18) {
             return true;
         }
@@ -238,106 +239,59 @@ public class Person {
     }
 
   
-    public boolean updatePersonalDetails(Scanner scanner) {
+    public boolean updatePersonalDetails(String personID, String firstName, String lastName, String address, String birthdate) {
+
         try {
-            deletePerson();
+            deletePerson(); // delete original record from file
         } catch (IOException e) {
             return false;
         }
-        boolean UserContinue = true;
-        while (UserContinue) {
-
-            System.out.println("Select a number from 1-6 for the information you want to update:");
-            System.out.println("1. Person ID");
-            System.out.println("2. First Name");
-            System.out.println("3. Last Name");
-            System.out.println("4. Address");
-            System.out.println("5. Birthdate");
-            System.out.println("6. Exit");
-            System.out.print("Enter your choice: ");
-            boolean canUpdateAdress = isOverEighteen();
-
-            
-            boolean validInt = false;
-            while (!validInt) {
-                try {
-                    int choice = Integer.parseInt(scanner.nextLine());
-                    if (choice < 1 || choice > 6) {
-                        System.out.println("Invalid choice. Please select a number between 1 and 6.");
-                    } else {
-                        validInt = true;
-                        switch (choice) {
-                            case 1:
-                                if (personID.charAt(0) % 2 == 0) {
-                                    System.out.println("Person ID cannot be updated for even-numbered IDs.");
-                                    continue;
-                                }
-                                System.out.print("""
-                                Enter new Person ID: should be exactly 10 characters long, 
-                                the first two characters should be numbers between 2 and 9, 
-                                there should be at least two special characters between characters 3 and 8, 
-                                and the last two characters should be uppercase letters (A-Z). 
-                                Example: \"56s_d%&fAB\"
-                                """);
-                                String newID = scanner.nextLine();
-                                if (isValidPersonID(newID)) {
-                                    setPersonID(newID);
-                                } else {
-                                    System.out.println("Invalid Person ID.");
-                                }
-                                break;
-                            case 2:
-                                System.out.print("Enter new First Name: ");
-                                setFirstName(scanner.nextLine());
-                                break;
-                            case 3:
-                                System.out.print("Enter new Last Name: ");
-                                setLastName(scanner.nextLine());
-                                break;
-                            case 4:
-                                if (!canUpdateAdress) {
-                                    System.out.println("Address cannot be updated for users under 18.");
-                                    continue;
-                                }
-                                System.out.print("Enter new Address: Format: 123|Main Street|Melbourne|Victoria|Australia\n");
-                                String newAddress = scanner.nextLine();
-                                if (isValidAddress(newAddress)) {
-                                    setAddress(newAddress);
-                                } else {
-                                    System.out.println("Invalid Address.");
-                                }
-                                break;
-                            case 5:
-                                
-                                System.out.print("Enter new Birthdate (dd-MM-yyyy): ");
-                                String newBirthdate = scanner.nextLine();
-                                if (isValidBirthdate(newBirthdate)) {
-                                    setBirthdate(newBirthdate);
-                                    System.out.println("Birthdate updated successfully, nothing else can be changed now!");
-                                    addPerson();
-                                    return true;
-                                } else {
-                                    System.out.println("Invalid Birthdate.");
-                                }
-                                break;
-                            case 6:
-                                System.out.println("Exiting update process.");
-                                UserContinue = false;
-                                continue;
-                        }
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid input. Please enter a number between 1 and 6.");
-                }
+        System.out.println(this.personID + " " + this.firstName + " " + this.lastName + " " + this.address + " " + this.birthdate);
+        System.out.println(personID + " " + firstName + " " + lastName + " " + address + " " + birthdate);
+        boolean canUpdateAdress = isOverEighteen();
+        if (birthdate != this.birthdate)  { // check if valid and different and if change return true to end
+            if (isValidBirthdate(birthdate)) {
+                this.birthdate = birthdate;
+                System.out.println("Birthdate updated, Nothing else can be updated.");
+                addPerson();
+                return true;
+            } else {
+                System.out.println("Invalid birthdate format. Please use dd-MM-yyyy.");
             }
             
         }
+        if (address != this.address) { // if address different check if under 18 and if address is valid to update
+            if (canUpdateAdress && isValidAddress(address)) {
+                this.address = address;
+            } else {
+                System.out.println("You are not eligible to update address as you are under 18 years old or address format is invalid.");
+            }
+        }
+        if (this.personID != personID) { // check if ID valid and not even if different and update
+            if (isValidPersonID(personID) && this.personID.charAt(0) % 2 != 0) {
+                this.personID = personID;
+            } else {
+                System.out.println("Invalid Person ID format or ID starts with an even number.");
+            }
+        }
+
+        if (this.firstName != firstName) { // if name not same as before then update
+            this.firstName = firstName;
+        }
+        if (this.lastName != lastName) { // if name not same as before then update
+            this.lastName = lastName;
+        }
+
+    
+            
         
         
         
-        boolean added = addPerson();
+        
+        
+        boolean added = addPerson(); //add person back to file at the bottom
         if (!added) {
-            System.out.println("Failed to update personal details & user may not exist.");
+            System.out.println("Failed to update personal details & user may not exist.");// if fails return false as person not added back
             return false;
         }
         return true;
