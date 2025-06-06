@@ -71,6 +71,7 @@ public class PersonTest {
 
     // Testing updateProfile()
     @Test
+    //Testing if the user is allowed to change their address when they're under 18
     public void testUnderageChangeAddress() {
         Person person6 = new Person();
 
@@ -84,6 +85,7 @@ public class PersonTest {
     }
 
     @Test
+    //Testing if you're allowed to change different fields when changing birthday, address and date of birth
     public void testMultipleFieldUpdate() {
         Person person7 = new Person();
 
@@ -110,6 +112,7 @@ public class PersonTest {
     }
 
     @Test
+    //Checking if you're allowed to change your id if the id's first character is even integer
     public void testChangeIDFirstCharacterEven() {
         Person person9 = new Person();
 
@@ -138,6 +141,7 @@ public class PersonTest {
     // Testing addDemeritPoints and Process demerit point
 
     @Test
+    //Checks if the the function hundles MM-DD-YYYY format
     public void testInvalidDateFormat()  {
         Person person11 = new Person();
 
@@ -147,10 +151,11 @@ public class PersonTest {
         person11.setAddress("32|Lilac Street|Melbourne|Victoria|Australia");
         person11.setBirthdate("19-11-1990");
 
-        assertEquals("Failed", person11.addDemeritPoints("6-23-2025", 4));
+        assertEquals("Failed", person11.addDemeritPoints("06-23-2025", 4));
     }
 
     @Test
+    //Checking if the function suspends the person if a 19 year old have 7 demerit point within 2 years
     public void testDemeritOverLimit() {
         Person person12 = new Person();
 
@@ -194,7 +199,7 @@ public class PersonTest {
         person14.setLastName("Kwong");
         person14.setAddress("32|Lilac Street|Melbourne|Victoria|Australia");
         person14.setBirthdate("19-11-1997");
-        //Initialize the starting demerit point as 6
+        //Initialize the starting demerit point as 9
         person14.addDemeritPoints("17-06-2023", 6);
         person14.addDemeritPoints("18-06-2023", 3);
 
@@ -204,7 +209,9 @@ public class PersonTest {
         assertEquals(false, person14.getIsSuspended());
     }
 
-    @Test public void testInputOutOfBounds() {
+    @Test 
+    //Test if the range of input of the input you're able to assign to a person at once.
+    public void testInputOutOfBounds() {
         Person person15 = new Person();
 
         person15.setPersonID("56s_d%&fAB");
@@ -213,6 +220,6 @@ public class PersonTest {
         person15.setAddress("32|Lilac Street|Melbourne|Victoria|Australia");
         person15.setBirthdate("19-11-2000");
 
-        assertEquals("Failed", person15.addDemeritPoints("10-06-2025", 9));
+        assertEquals("Failed", person15.addDemeritPoints("10-06-2025", 7));
     }
 }
