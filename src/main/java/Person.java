@@ -11,7 +11,6 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class Person {
 
@@ -154,7 +153,6 @@ public class Person {
     // Validates date format (dd-MM-yyyy) 
     private boolean isValidBirthdate(String dateStr) {
         boolean result = true;
-
         if (dateStr == null) {
             result = false;
         }
@@ -249,7 +247,7 @@ public class Person {
         System.out.println(this.personID + " " + this.firstName + " " + this.lastName + " " + this.address + " " + this.birthdate);
         System.out.println(personID + " " + firstName + " " + lastName + " " + address + " " + birthdate);
         boolean canUpdateAdress = isOverEighteen();
-        if (birthdate != this.birthdate)  { // check if valid and different and if change return true to end
+        if (birthdate != this.birthdate && !birthdate.equals(""))  { // check if valid and different and if change return true to end
             if (isValidBirthdate(birthdate)) {
                 this.birthdate = birthdate;
                 System.out.println("Birthdate updated, Nothing else can be updated.");
@@ -262,7 +260,7 @@ public class Person {
             }
             
         }
-        if (address != this.address) { // if address different check if under 18 and if address is valid to update
+        if (address != this.address && !address.equals("")) { // if address different check if under 18 and if address is valid to update
             if (canUpdateAdress && isValidAddress(address)) {
                 this.address = address;
             } else {
@@ -271,7 +269,7 @@ public class Person {
                 return false;
             }
         }
-        if (this.personID != personID) { // check if ID valid and not even if different and update
+        if (this.personID != personID && !personID.equals("")) { // check if ID valid and not even if different and update
             if (isValidPersonID(personID) && this.personID.charAt(0) % 2 != 0) {
                 this.personID = personID;
             } else {
@@ -287,13 +285,6 @@ public class Person {
         if (this.lastName != lastName) { // if name not same as before then update
             this.lastName = lastName;
         }
-
-    
-            
-        
-        
-        
-        
         
         boolean added = addPerson(); //add person back to file at the bottom
         if (!added) {
@@ -383,10 +374,15 @@ public class Person {
                 isSuspended = true;
             }
         } 
+        fileWriter(fileName, "Total demerit points: " + totalDemeritsPoint);
         System.out.println("License suspended: " + isSuspended);
 
         return "Success";
     }
+
+    public boolean getIsSuspended() {
+        return isSuspended;
+    };
 
     public void createFile(String fileName){
         File file = new File(fileName);
