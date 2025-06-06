@@ -265,7 +265,7 @@ public class Person {
         System.out.println(this.personID + " " + this.firstName + " " + this.lastName + " " + this.address + " " + this.birthdate);
         System.out.println(personID + " " + firstName + " " + lastName + " " + address + " " + birthdate);
         boolean canUpdateAdress = isOverEighteen();
-        if (birthdate != this.birthdate)  { // check if valid and different and if change return true to end
+        if (!this.birthdate.trim().equals(birthdate.trim()))  { // check if valid and different and if change return true to end
             if (isValidBirthdate(birthdate)) {
                 this.birthdate = birthdate;
                 System.out.println("Birthdate updated, Nothing else can be updated.");
@@ -273,28 +273,36 @@ public class Person {
                 return true;
             } else {
                 System.out.println("Invalid birthdate format. Please use dd-MM-yyyy.");
+                addPerson();
+                return false;
             }
             
         }
-        if (address != this.address) { // if address different check if under 18 and if address is valid to update
+        String saveOldAddress = this.address; //save old address incase ID changed and not valid
+        if (!address.equals(this.address)) { // if address different check if under 18 and if address is valid to update
             if (canUpdateAdress && isValidAddress(address)) {
                 this.address = address;
             } else {
                 System.out.println("You are not eligible to update address as you are under 18 years old or address format is invalid.");
+                addPerson();
+                return false;
             }
         }
-        if (this.personID != personID) { // check if ID valid and not even if different and update
+        if (!this.personID.equals(personID)) { // check if ID valid and not even if different and update
             if (isValidPersonID(personID) && this.personID.charAt(0) % 2 != 0) {
                 this.personID = personID;
             } else {
                 System.out.println("Invalid Person ID format or ID starts with an even number.");
+                this.address = saveOldAddress; // revert to old address
+                addPerson();
+                return false;
             }
         }
 
-        if (this.firstName != firstName) { // if name not same as before then update
+        if (!this.firstName.equals(firstName)) { // if name not same as before then update
             this.firstName = firstName;
         }
-        if (this.lastName != lastName) { // if name not same as before then update
+        if (!this.lastName.equals(lastName)) { // if name not same as before then update
             this.lastName = lastName;
         }
 

@@ -81,6 +81,21 @@ public class tester {
                                 currPerson.updatePersonalDetails(p.getID(), p.getFName(), p.getLName(), p.getAddress(), p.getBitrthDate());
                             }
                         }
+<<<<<<< HEAD
+=======
+                        Person currPerson = new Person();
+                        System.out.println("Current Person ID: " + existingDetails[0]);
+                        currPerson.setPersonID(existingDetails[0]);
+                        System.out.println("Current First Name: " + existingDetails[1]);
+                        currPerson.setFirstName(existingDetails[1]);
+                        System.out.println("Current Last Name: " + existingDetails[2]);
+                        currPerson.setLastName(existingDetails[2]);
+                        System.out.println("Current Address: " + existingDetails[3]); 
+                        currPerson.setAddress(existingDetails[3]);
+                        System.out.println("Current Birthdate: " + existingDetails[4]);
+                        currPerson.setBirthdate(existingDetails[4]);
+                        System.out.println(currPerson.updatePersonalDetails("28(*&)IJKJ", existingDetails[1], "GA", "345|wendell street|Melbourne|Victoria|Australia", "29-04-2004"));
+>>>>>>> 9dfd2cac240521b6e3806fae31212dc731367810
 
 
                         break;
