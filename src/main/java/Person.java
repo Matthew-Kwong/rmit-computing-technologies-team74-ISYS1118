@@ -263,7 +263,7 @@ public class Person {
         System.out.println(this.personID + " " + this.firstName + " " + this.lastName + " " + this.address + " " + this.birthdate);
         System.out.println(personID + " " + firstName + " " + lastName + " " + address + " " + birthdate);
         boolean canUpdateAdress = isOverEighteen();
-        if (!this.birthdate.trim().equals(birthdate.trim()))  { // check if valid and different and if change return true to end
+        if (!this.birthdate.trim().equals(birthdate.trim()) && !birthdate.equals(""))  { // check if valid and different and if change return true to end
             if (isValidBirthdate(birthdate)) {
                 this.birthdate = birthdate;
                 System.out.println("Birthdate updated, Nothing else can be updated.");
@@ -277,7 +277,7 @@ public class Person {
             
         }
         String saveOldAddress = this.address; //save old address incase ID changed and not valid
-        if (!address.equals(this.address)) { // if address different check if under 18 and if address is valid to update
+        if (!address.equals(this.address) && !address.equals("")) { // if address different check if under 18 and if address is valid to update
             if (canUpdateAdress && isValidAddress(address)) {
                 this.address = address;
             } else {
@@ -286,7 +286,7 @@ public class Person {
                 return false;
             }
         }
-        if (!this.personID.equals(personID)) { // check if ID valid and not even if different and update
+        if (!this.personID.equals(personID) && !personID.equals("")) { // check if ID valid and not even if different and update
             if (isValidPersonID(personID) && this.personID.charAt(0) % 2 != 0) {
                 this.personID = personID;
             } else {
