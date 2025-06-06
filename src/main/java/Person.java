@@ -36,6 +36,22 @@ public class Person {
         // demeritPoints.put(date_4, 5);
     }
 
+    public String getID(){
+        return personID;
+    }
+    public String getFName(){
+        return firstName;
+    }
+    public String getLName(){
+        return lastName;
+    }
+    public String getAddress(){
+        return address;
+    }
+    public String getBitrthDate(){
+        return birthdate;
+    }
+
     // Gayath : dont change this (Let me know if you need to)
     public boolean addPerson() {
         boolean isValid = true;
@@ -247,7 +263,7 @@ public class Person {
         System.out.println(this.personID + " " + this.firstName + " " + this.lastName + " " + this.address + " " + this.birthdate);
         System.out.println(personID + " " + firstName + " " + lastName + " " + address + " " + birthdate);
         boolean canUpdateAdress = isOverEighteen();
-        if (birthdate != this.birthdate && !birthdate.equals(""))  { // check if valid and different and if change return true to end
+        if (!this.birthdate.trim().equals(birthdate.trim()))  { // check if valid and different and if change return true to end
             if (isValidBirthdate(birthdate)) {
                 this.birthdate = birthdate;
                 System.out.println("Birthdate updated, Nothing else can be updated.");
@@ -260,7 +276,8 @@ public class Person {
             }
             
         }
-        if (address != this.address && !address.equals("")) { // if address different check if under 18 and if address is valid to update
+        String saveOldAddress = this.address; //save old address incase ID changed and not valid
+        if (!address.equals(this.address)) { // if address different check if under 18 and if address is valid to update
             if (canUpdateAdress && isValidAddress(address)) {
                 this.address = address;
             } else {
@@ -269,20 +286,21 @@ public class Person {
                 return false;
             }
         }
-        if (this.personID != personID && !personID.equals("")) { // check if ID valid and not even if different and update
+        if (!this.personID.equals(personID)) { // check if ID valid and not even if different and update
             if (isValidPersonID(personID) && this.personID.charAt(0) % 2 != 0) {
                 this.personID = personID;
             } else {
                 System.out.println("Invalid Person ID format or ID starts with an even number.");
+                this.address = saveOldAddress; // revert to old address
                 addPerson();
                 return false;
             }
         }
 
-        if (this.firstName != firstName) { // if name not same as before then update
+        if (!this.firstName.equals(firstName)) { // if name not same as before then update
             this.firstName = firstName;
         }
-        if (this.lastName != lastName) { // if name not same as before then update
+        if (!this.lastName.equals(lastName)) { // if name not same as before then update
             this.lastName = lastName;
         }
         
@@ -322,7 +340,7 @@ public class Person {
     }
 
     // write offense date and points to text file
-    public String processDemeritPoints() {
+    public String writeDemeritPoints() {
         // create text file
         String fileName = firstName + ".txt";
         createFile(fileName);
