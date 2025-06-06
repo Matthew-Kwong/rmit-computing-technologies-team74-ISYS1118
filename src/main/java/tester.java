@@ -104,7 +104,7 @@ public class tester {
 
                     case 5:
                         System.out.println("Process Demerit points started");
-                        System.out.println("Process Demerit points: " + p.processDemeritPoints());
+                        System.out.println("Process Demerit points: " + p.writeDemeritPoints());
 
                         break;
 

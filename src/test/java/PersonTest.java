@@ -163,7 +163,7 @@ public class PersonTest {
         person12.addDemeritPoints("17-06-2023", 6);
 
         person12.addDemeritPoints("10-10-2024", 1);
-        person12.processDemeritPoints();
+        person12.writeDemeritPoints();
 
         assertEquals(true, person12.getIsSuspended());
     }
@@ -182,7 +182,7 @@ public class PersonTest {
 
         person13.addDemeritPoints("10-10-2024", 1);
 
-        assertEquals("Success", person13.processDemeritPoints());
+        assertEquals("Success", person13.writeDemeritPoints());
     }
 
     @Test
@@ -199,7 +199,7 @@ public class PersonTest {
         person14.addDemeritPoints("18-06-2023", 3);
 
         person14.addDemeritPoints("10-10-2024", 1);
-        person14.processDemeritPoints();
+        person14.writeDemeritPoints();
 
         assertEquals(false, person14.getIsSuspended());
     }
