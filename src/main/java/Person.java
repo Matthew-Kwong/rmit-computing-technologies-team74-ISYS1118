@@ -37,6 +37,22 @@ public class Person {
         // demeritPoints.put(date_4, 5);
     }
 
+    public String getID(){
+        return personID;
+    }
+    public String getFName(){
+        return firstName;
+    }
+    public String getLName(){
+        return lastName;
+    }
+    public String getAddress(){
+        return address;
+    }
+    public String getBitrthDate(){
+        return birthdate;
+    }
+
     // Gayath : dont change this (Let me know if you need to)
     public boolean addPerson() {
         boolean isValid = true;
@@ -325,7 +341,7 @@ public class Person {
     }
 
     // write offense date and points to text file
-    public String processDemeritPoints() {
+    public String writeDemeritPoints() {
         // create text file
         String fileName = firstName + ".txt";
         createFile(fileName);

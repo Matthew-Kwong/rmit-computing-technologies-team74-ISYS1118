@@ -1,7 +1,9 @@
 import java.io.BufferedReader;
+import java.util.*;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Scanner;
+
+
 
 public class tester {
 
@@ -21,15 +23,15 @@ public class tester {
         }
         return null; // No match found or error occurred
     }
+    
     public static void main(String[] args) {
         
-        Person p = new Person();
+        ArrayList<Person> persons = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         // Set valid person details
        
         boolean exit = false;
         while (!exit) {
-            
             System.out.println("Select the number for the following options:");
             System.out.println("1. Add Person Details");
             System.out.println("2. Update Person Details");
@@ -58,6 +60,7 @@ public class tester {
                         AddingPerson.setAddress(address);
                         AddingPerson.setBirthdate(birthdate);
                         if (AddingPerson.addPerson()) {
+                            persons.add(AddingPerson);
                             System.out.println("Person details added successfully.");
                         } else {
                             System.out.println("Failed to add person details. Please check the input format.");
@@ -66,23 +69,18 @@ public class tester {
                     case 2:
                         System.out.println("Enter Person ID to update:");
                         String updatePersonID = scanner.nextLine();
-                        String[] existingDetails = getLinePartsByID("persons.txt", updatePersonID);
-                        if (existingDetails == null) {
-                            System.out.println("No person found with that ID.");
-                            break;
+
+                        for (Person p : persons){
+                            if (p.getID().equals(updatePersonID)){
+                                Person currPerson = p;
+                                System.out.println("Current Person ID: " + p.getID());
+                                System.out.println("Current First Name: " + p.getFName());
+                                System.out.println("Current Last Name: " + p.getLName());
+                                System.out.println("Current Address: " + p.getAddress()); 
+                                System.out.println("Current Birthdate: " + p.getBitrthDate());
+                                currPerson.updatePersonalDetails(p.getID(), p.getFName(), p.getLName(), p.getAddress(), p.getBitrthDate());
+                            }
                         }
-                        Person currPerson = new Person();
-                        System.out.println("Current Person ID: " + existingDetails[0]);
-                        currPerson.setPersonID(existingDetails[0]);
-                        System.out.println("Current First Name: " + existingDetails[1]);
-                        currPerson.setFirstName(existingDetails[1]);
-                        System.out.println("Current Last Name: " + existingDetails[2]);
-                        currPerson.setLastName(existingDetails[2]);
-                        System.out.println("Current Address: " + existingDetails[3]); 
-                        currPerson.setAddress(existingDetails[3]);
-                        System.out.println("Current Birthdate: " + existingDetails[4]);
-                        currPerson.setBirthdate(existingDetails[4]);
-                        currPerson.updatePersonalDetails(existingDetails[0], existingDetails[1], existingDetails[2], "432|Wiseman court|Melbourne|Victoria|Australia", existingDetails[4]);
 
 
                         break;
@@ -94,18 +92,46 @@ public class tester {
                         deletePersonOfID.deletePerson();
                         break;
                     case 4:
-                        System.out.println("Enter offense date in dd-MM-yyyy format");
-                        String date = scanner.nextLine(); 
-                        System.out.println("Enter demerit points");
-                        Integer points = scanner.nextInt();
-                        System.out.println("Add demerit points: "+ p.addDemeritPoints(date, points));
+                        try{
+                            if (!persons.isEmpty()){
+                                System.out.println("Enter Person ID to add demerit point");
+                                String addDemeritId = scanner.nextLine();
+                                System.out.println("Enter offense date in dd-MM-yyyy format");
+                                String date = scanner.nextLine(); 
+                                System.out.println("Enter demerit points");
+                                Integer points = scanner.nextInt();
+                                scanner.nextLine();
+                                for (Person p : persons){
+                                    if (p.getID().equals(addDemeritId)){
+                                        System.out.println("Add demerit points: "+ p.addDemeritPoints(date, points));
+                                        break;
+                                    }
+                                }
+                            }
+                            else{
+                                System.out.println("Please add person first");
+                            }
+
+                            }
+                        catch(InputMismatchException e){
+                            System.out.println("Error: Input type mismatch try again");
+                        }
+                        
 
                         break;
 
                     case 5:
-                        System.out.println("Process Demerit points started");
-                        System.out.println("Process Demerit points: " + p.processDemeritPoints());
-
+                        if (!persons.isEmpty()){
+                            System.out.println("Process Demerit points started");
+                            System.out.println("Enter Person ID to add demerit point");
+                            String writeDemeritID = scanner.nextLine();
+                            for (Person p : persons){
+                                if (p.getID().equals(writeDemeritID)){
+                                    System.out.println("Add demerit points: "+ p.writeDemeritPoints());;
+                                    break;
+                                }
+                            }
+                            }
                         break;
 
                     case 6:
