@@ -82,7 +82,7 @@ public class tester {
                         currPerson.setAddress(existingDetails[3]);
                         System.out.println("Current Birthdate: " + existingDetails[4]);
                         currPerson.setBirthdate(existingDetails[4]);
-                        System.out.println(currPerson.updatePersonalDetails(existingDetails[0], existingDetails[1], "fewfwefwef", "fwefwefwef", "29-04-2010"));
+                        System.out.println(currPerson.updatePersonalDetails("28(*&)IJKJ", existingDetails[1], "GA", "345|wendell street|Melbourne|Victoria|Australia", "29-04-2004"));
 
 
                         break;
