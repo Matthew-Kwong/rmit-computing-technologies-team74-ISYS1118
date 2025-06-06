@@ -257,6 +257,8 @@ public class Person {
                 return true;
             } else {
                 System.out.println("Invalid birthdate format. Please use dd-MM-yyyy.");
+                addPerson();
+                return false;
             }
             
         }
@@ -265,6 +267,8 @@ public class Person {
                 this.address = address;
             } else {
                 System.out.println("You are not eligible to update address as you are under 18 years old or address format is invalid.");
+                addPerson();
+                return false;
             }
         }
         if (this.personID != personID) { // check if ID valid and not even if different and update
@@ -272,6 +276,8 @@ public class Person {
                 this.personID = personID;
             } else {
                 System.out.println("Invalid Person ID format or ID starts with an even number.");
+                addPerson();
+                return false;
             }
         }
 
