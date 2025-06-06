@@ -262,6 +262,7 @@ public class Person {
             }
             
         }
+        String saveOldAddress = this.address; //save old address incase ID changed and not valid
         if (!address.equals(this.address)) { // if address different check if under 18 and if address is valid to update
             if (canUpdateAdress && isValidAddress(address)) {
                 this.address = address;
@@ -276,6 +277,7 @@ public class Person {
                 this.personID = personID;
             } else {
                 System.out.println("Invalid Person ID format or ID starts with an even number.");
+                this.address = saveOldAddress; // revert to old address
                 addPerson();
                 return false;
             }
